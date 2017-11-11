@@ -2,34 +2,31 @@
 
 public class PlayerMovement : MonoBehaviour
 {
-    
-	public float speed = 6f;
-	private Vector3 movement;
-	private Animator anim;
-	private Rigidbody playerRigidbody;
-	private int floorMask;
-	private float camRayLength = 100f;
+    //Add Variable
+    //存取修飾子public private protected
+    public float speed = 6f;
+    private Vector3 movement;
+    private Animator anim;
+    private Rigidbody playerRigidbody;
+    private int floorMask;
+    private float camRayLength = 100f;
 
-	private void Awake()
-	{
-		floorMask = LayerMask.GetMask ("Floor");
-		anim = GetComponent<Animator> ();
-		playerRigidbody = GetComponent<Rigidbody> ();
-        
-
-
-	}
+    private void Awake()
+    {
+        floorMask = LayerMask.GetMask("Floor");
+        anim = GetComponent<Animator>();
+        playerRigidbody = GetComponent<Rigidbody>();
+    }
 
     private void FixedUpdate()
     {
-
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
         Move(h, v);
         Turning();
         Animating(h, v);
     }
-
+    //Method 
     private void Move(float h, float v)
     {
         movement.Set(h, 0, v);
@@ -41,23 +38,21 @@ public class PlayerMovement : MonoBehaviour
     {
         Ray camRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit floorHit;
-        if (Physics.Raycast(camRay, out floorHit, camRayLength, floorMask))//如果有打到地板
+        //如果有打到地板
+        if (Physics.Raycast(camRay, out floorHit, camRayLength, floorMask))
         {
             //打到地板的點座標
-            Vector3 playerToMuse = floorHit.point - transform.position;
-            playerToMuse.y = 0f;
+            Vector3 playerToMouse = floorHit.point - transform.position;
+            playerToMouse.y = 0f;
             //(x,y,z,w)
-            Quaternion newRotation = Quaternion.LookRotation(playerToMuse);
+            Quaternion newRotation = Quaternion.LookRotation(playerToMouse);
             playerRigidbody.MoveRotation(newRotation);
         }
-
     }
 
     private void Animating(float h, float v)
     {
-
         bool walking = h != 0f || v != 0;
         anim.SetBool("IsWalking", walking);
     }
-
 }
